@@ -1,54 +1,91 @@
+import org.junit.jupiter.api.Test;
 import java.util.*;
-import java.util.stream.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class UseCase9TrainConsistMgmt {
+public class Train {
 
     static class Bogie {
-        String type;
         int capacity;
 
-        Bogie(String type, int capacity) {
-            this.type = type;
+        Bogie(int capacity) {
             this.capacity = capacity;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        @Override
-        public String toString() {
-            return type + " -> " + capacity;
         }
     }
 
-    public static void main(String[] args) {
+    private int getTotal(List<Bogie> bogies) {
+        return bogies.stream()
+                .map(b -> b.capacity)
+                .reduce(0, Integer::sum);
+    }
 
-        System.out.println("=========================================");
-        System.out.println(" UC9 - Group Bogies by Type ");
-        System.out.println("=========================================\n");
+    @Test
+    void testReduce_TotalSeatCalculation() {
+        List<Bogie> bogies = List.of(
+                new Bogie(70),
+                new Bogie(30)
+        );
 
+        assertEquals(100, getTotal(bogies));
+    }
+
+    @Test
+    void testReduce_MultipleBogiesAggregation() {
+        List<Bogie> bogies = List.of(
+                new Bogie(10),
+                new Bogie(20),
+                new Bogie(30)
+        );
+
+        assertEquals(60, getTotal(bogies));
+    }
+
+    @Test
+    void testReduce_SingleBogieCapacity() {
+        List<Bogie> bogies = List.of(
+                new Bogie(50)
+        );
+
+        assertEquals(50, getTotal(bogies));
+    }
+
+    @Test
+    void testReduce_EmptyBogieList() {
         List<Bogie> bogies = new ArrayList<>();
 
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("Sleeper", 80));
-        bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("AC Chair", 60));
+        assertEquals(0, getTotal(bogies));
+    }
 
-        // 🔥 Grouping using Streams
-        Map<String, List<Bogie>> groupedBogies =
-                bogies.stream()
-                        .collect(Collectors.groupingBy(Bogie::getType));
+    @Test
+    void testReduce_CorrectCapacityExtraction() {
+        List<Bogie> bogies = List.of(
+                new Bogie(40),
+                new Bogie(60)
+        );
 
-        // Display grouped result
-        System.out.println("Grouped Bogies:\n");
+        assertEquals(100, getTotal(bogies));
+    }
 
-        groupedBogies.forEach((type, list) -> {
-            System.out.println(type + ":");
-            list.forEach(b -> System.out.println("   " + b));
-        });
+    @Test
+    void testReduce_AllBogiesIncluded() {
+        List<Bogie> bogies = List.of(
+                new Bogie(10),
+                new Bogie(20),
+                new Bogie(30),
+                new Bogie(40)
+        );
 
-        System.out.println("\nUC9 grouping completed...");
+        assertEquals(100, getTotal(bogies));
+    }
+
+    @Test
+    void testReduce_OriginalListUnchanged() {
+        List<Bogie> bogies = new ArrayList<>();
+        bogies.add(new Bogie(10));
+
+        int size = bogies.size();
+
+        getTotal(bogies);
+
+        assertEquals(size, bogies.size());
     }
 }

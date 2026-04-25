@@ -1,7 +1,6 @@
 import java.util.*;
-import java.util.stream.*;
 
-public class UseCase9TrainConsistMgmt {
+public class Train {
 
     static class Bogie {
         String type;
@@ -10,10 +9,6 @@ public class UseCase9TrainConsistMgmt {
         Bogie(String type, int capacity) {
             this.type = type;
             this.capacity = capacity;
-        }
-
-        public String getType() {
-            return type;
         }
 
         @Override
@@ -25,30 +20,23 @@ public class UseCase9TrainConsistMgmt {
     public static void main(String[] args) {
 
         System.out.println("=========================================");
-        System.out.println(" UC9 - Group Bogies by Type ");
+        System.out.println(" UC10 - Count Total Seats using reduce ");
         System.out.println("=========================================\n");
 
         List<Bogie> bogies = new ArrayList<>();
 
         bogies.add(new Bogie("Sleeper", 72));
         bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("Sleeper", 80));
         bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("AC Chair", 60));
+        bogies.add(new Bogie("General", 90));
 
-        // 🔥 Grouping using Streams
-        Map<String, List<Bogie>> groupedBogies =
-                bogies.stream()
-                        .collect(Collectors.groupingBy(Bogie::getType));
+        // 🔥 map + reduce
+        int totalSeats = bogies.stream()
+                .map(b -> b.capacity)          // extract numbers
+                .reduce(0, Integer::sum);     // sum all
 
-        // Display grouped result
-        System.out.println("Grouped Bogies:\n");
+        System.out.println("Total Seating Capacity: " + totalSeats);
 
-        groupedBogies.forEach((type, list) -> {
-            System.out.println(type + ":");
-            list.forEach(b -> System.out.println("   " + b));
-        });
-
-        System.out.println("\nUC9 grouping completed...");
+        System.out.println("\nUC10 aggregation completed...");
     }
 }
