@@ -2,55 +2,48 @@ import java.util.*;
 
 public class Train {
 
-    // 🔍 Binary Search Method
-    public static boolean binarySearch(String[] arr, String key) {
+    // 🔍 Search with validation
+    public static boolean searchBogie(String[] arr, String key) {
 
-        int low = 0;
-        int high = arr.length - 1;
+        // 🔥 Fail-fast check
+        if (arr == null || arr.length == 0) {
+            throw new IllegalStateException("No bogies available for search");
+        }
 
-        while (low <= high) {
-
-            int mid = (low + high) / 2;
-
-            int cmp = key.compareTo(arr[mid]);
-
-            if (cmp == 0) {
-                return true; // found
-            } else if (cmp < 0) {
-                high = mid - 1; // search left
-            } else {
-                low = mid + 1; // search right
+        // Linear search (you can also plug binary here)
+        for (String id : arr) {
+            if (id.equals(key)) {
+                return true;
             }
         }
 
-        return false; // not found
+        return false;
     }
 
     public static void main(String[] args) {
 
         System.out.println("=========================================");
-        System.out.println(" UC19 - Binary Search for Bogie ID ");
+        System.out.println(" UC20 - Safe Search with Exception ");
         System.out.println("=========================================\n");
 
-        String[] bogieIds = {"BG309","BG101","BG550","BG205","BG412"};
-
-        // 🔥 Step 1: Sort (IMPORTANT precondition)
-        Arrays.sort(bogieIds);
-
-        System.out.println("Sorted Bogie IDs:");
-        System.out.println(Arrays.toString(bogieIds));
+        String[] bogieIds = {}; // try with empty & non-empty
 
         Scanner sc = new Scanner(System.in);
 
-        System.out.print("\nEnter Bogie ID to search: ");
+        System.out.print("Enter Bogie ID to search: ");
         String key = sc.nextLine();
 
-        boolean found = binarySearch(bogieIds, key);
+        try {
+            boolean found = searchBogie(bogieIds, key);
 
-        if (found) {
-            System.out.println("Bogie FOUND ");
-        } else {
-            System.out.println("Bogie NOT FOUND ");
+            if (found) {
+                System.out.println("Bogie FOUND ");
+            } else {
+                System.out.println("Bogie NOT FOUND ");
+            }
+
+        } catch (IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
         }
 
         sc.close();
