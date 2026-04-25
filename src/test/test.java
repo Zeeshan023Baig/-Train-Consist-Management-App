@@ -1,116 +1,54 @@
-import org.junit.jupiter.api.Test;
 import java.util.*;
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.stream.*;
 
-public class Train {
+public class UseCase9TrainConsistMgmt {
 
     static class Bogie {
-        String name;
+        String type;
         int capacity;
 
-        Bogie(String name, int capacity) {
-            this.name = name;
+        Bogie(String type, int capacity) {
+            this.type = type;
             this.capacity = capacity;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        @Override
+        public String toString() {
+            return type + " -> " + capacity;
         }
     }
 
-    // Helper method
-    private List<Bogie> filter(List<Bogie> bogies, int threshold) {
-        return bogies.stream()
-                .filter(b -> b.capacity > threshold)
-                .toList();
-    }
+    public static void main(String[] args) {
 
-    @Test
-    void testFilter_CapacityGreaterThanThreshold() {
-        List<Bogie> bogies = List.of(
-                new Bogie("A", 80),
-                new Bogie("B", 90)
-        );
+        System.out.println("=========================================");
+        System.out.println(" UC9 - Group Bogies by Type ");
+        System.out.println("=========================================\n");
 
-        List<Bogie> result = filter(bogies, 70);
-
-        assertEquals(2, result.size());
-    }
-
-    @Test
-    void testFilter_CapacityEqualToThreshold() {
-        List<Bogie> bogies = List.of(
-                new Bogie("A", 70)
-        );
-
-        List<Bogie> result = filter(bogies, 70);
-
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void testFilter_CapacityLessThanThreshold() {
-        List<Bogie> bogies = List.of(
-                new Bogie("A", 50)
-        );
-
-        List<Bogie> result = filter(bogies, 70);
-
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void testFilter_MultipleBogiesMatching() {
-        List<Bogie> bogies = List.of(
-                new Bogie("A", 80),
-                new Bogie("B", 75),
-                new Bogie("C", 40)
-        );
-
-        List<Bogie> result = filter(bogies, 70);
-
-        assertEquals(2, result.size());
-    }
-
-    @Test
-    void testFilter_NoBogiesMatching() {
-        List<Bogie> bogies = List.of(
-                new Bogie("A", 30),
-                new Bogie("B", 40)
-        );
-
-        List<Bogie> result = filter(bogies, 70);
-
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void testFilter_AllBogiesMatching() {
-        List<Bogie> bogies = List.of(
-                new Bogie("A", 80),
-                new Bogie("B", 90)
-        );
-
-        List<Bogie> result = filter(bogies, 70);
-
-        assertEquals(2, result.size());
-    }
-
-    @Test
-    void testFilter_EmptyBogieList() {
         List<Bogie> bogies = new ArrayList<>();
 
-        List<Bogie> result = filter(bogies, 70);
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 56));
+        bogies.add(new Bogie("Sleeper", 80));
+        bogies.add(new Bogie("First Class", 24));
+        bogies.add(new Bogie("AC Chair", 60));
 
-        assertTrue(result.isEmpty());
-    }
+        // 🔥 Grouping using Streams
+        Map<String, List<Bogie>> groupedBogies =
+                bogies.stream()
+                        .collect(Collectors.groupingBy(Bogie::getType));
 
-    @Test
-    void testFilter_OriginalListUnchanged() {
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("A", 50));
-        bogies.add(new Bogie("B", 80));
+        // Display grouped result
+        System.out.println("Grouped Bogies:\n");
 
-        int originalSize = bogies.size();
+        groupedBogies.forEach((type, list) -> {
+            System.out.println(type + ":");
+            list.forEach(b -> System.out.println("   " + b));
+        });
 
-        filter(bogies, 70);
-
-        assertEquals(originalSize, bogies.size());
+        System.out.println("\nUC9 grouping completed...");
     }
 }

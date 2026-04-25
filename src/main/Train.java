@@ -1,53 +1,54 @@
 import java.util.*;
 import java.util.stream.*;
 
-public class Train {
+public class UseCase9TrainConsistMgmt {
 
-    // Reusing Bogie model from UC7
     static class Bogie {
-        String name;
+        String type;
         int capacity;
 
-        Bogie(String name, int capacity) {
-            this.name = name;
+        Bogie(String type, int capacity) {
+            this.type = type;
             this.capacity = capacity;
+        }
+
+        public String getType() {
+            return type;
         }
 
         @Override
         public String toString() {
-            return name + " -> " + capacity;
+            return type + " -> " + capacity;
         }
     }
 
     public static void main(String[] args) {
 
         System.out.println("=========================================");
-        System.out.println(" UC8 - Filter Passenger Bogies Using Streams ");
+        System.out.println(" UC9 - Group Bogies by Type ");
         System.out.println("=========================================\n");
 
-        // Create list of passenger bogies
         List<Bogie> bogies = new ArrayList<>();
 
         bogies.add(new Bogie("Sleeper", 72));
         bogies.add(new Bogie("AC Chair", 56));
+        bogies.add(new Bogie("Sleeper", 80));
         bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("General", 90));
+        bogies.add(new Bogie("AC Chair", 60));
 
-        // Display all bogies
-        System.out.println("All Bogies:");
-        bogies.forEach(System.out::println);
+        // 🔥 Grouping using Streams
+        Map<String, List<Bogie>> groupedBogies =
+                bogies.stream()
+                        .collect(Collectors.groupingBy(Bogie::getType));
 
-        int threshold = 60;
+        // Display grouped result
+        System.out.println("Grouped Bogies:\n");
 
-        // Stream filtering
-        List<Bogie> filteredBogies = bogies.stream()
-                .filter(b -> b.capacity > threshold)
-                .toList();
+        groupedBogies.forEach((type, list) -> {
+            System.out.println(type + ":");
+            list.forEach(b -> System.out.println("   " + b));
+        });
 
-        // Display filtered bogies
-        System.out.println("\nFiltered Bogies (Capacity > " + threshold + "):");
-        filteredBogies.forEach(System.out::println);
-
-        System.out.println("\nUC8 filtering completed...");
+        System.out.println("\nUC9 grouping completed...");
     }
 }
