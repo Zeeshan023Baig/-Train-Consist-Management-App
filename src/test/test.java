@@ -1,71 +1,71 @@
-import java.util.*;
-import java.util.stream.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class Train {
+public class TrainTest {
 
-    // Simple Bogie model
-    static class Bogie {
-        String type;
-        int capacity;
-
-        Bogie(String type, int capacity) {
-            this.type = type;
-            this.capacity = capacity;
-        }
-
-        public int getCapacity() {
-            return capacity;
+    static class InvalidCapacityException extends Exception {
+        public InvalidCapacityException(String message) {
+            super(message);
         }
     }
 
-    public static void main(String[] args) {
+    static class PassengerBogie {
+        String type;
+        int capacity;
 
-        System.out.println("=========================================");
-        System.out.println(" UC13 - Performance (Loop vs Stream) ");
-        System.out.println("=========================================\n");
-
-        // Create a LARGE dataset for meaningful timing
-        List<Bogie> bogies = new ArrayList<>();
-        Random r = new Random();
-
-        for (int i = 0; i < 200_000; i++) {
-            int cap = 20 + r.nextInt(100); // 20..119
-            bogies.add(new Bogie("Passenger", cap));
-        }
-
-        int threshold = 60;
-
-        // ---------------- LOOP ----------------
-        long startLoop = System.nanoTime();
-
-        List<Bogie> loopResult = new ArrayList<>();
-        for (Bogie b : bogies) {
-            if (b.getCapacity() > threshold) {
-                loopResult.add(b);
+        PassengerBogie(String type, int capacity) throws InvalidCapacityException {
+            if (capacity <= 0) {
+                throw new InvalidCapacityException("Capacity must be greater than zero");
             }
+            this.type = type;
+            this.capacity = capacity;
         }
+    }
 
-        long endLoop = System.nanoTime();
-        long loopTime = endLoop - startLoop;
+    @Test
+    void testException_ValidCapacityCreation() throws Exception {
+        PassengerBogie b = new PassengerBogie("Sleeper", 70);
+        assertEquals(70, b.capacity);
+    }
 
-        // ---------------- STREAM ----------------
-        long startStream = System.nanoTime();
+    @Test
+    void testException_NegativeCapacityThrowsException() {
+        Exception ex = assertThrows(InvalidCapacityException.class, () -> {
+            new PassengerBogie("AC", -10);
+        });
 
-        List<Bogie> streamResult = bogies.stream()
-                .filter(b -> b.getCapacity() > threshold)
-                .toList();
+        assertEquals("Capacity must be greater than zero", ex.getMessage());
+    }
 
-        long endStream = System.nanoTime();
-        long streamTime = endStream - startStream;
+    @Test
+    void testException_ZeroCapacityThrowsException() {
+        assertThrows(InvalidCapacityException.class, () -> {
+            new PassengerBogie("AC", 0);
+        });
+    }
 
-        // ---------------- OUTPUT ----------------
-        System.out.println("Loop result size   : " + loopResult.size());
-        System.out.println("Stream result size : " + streamResult.size());
+    @Test
+    void testException_ExceptionMessageValidation() {
+        Exception ex = assertThrows(InvalidCapacityException.class, () -> {
+            new PassengerBogie("Sleeper", 0);
+        });
 
-        System.out.println("\nExecution Time:");
-        System.out.println("Loop   : " + loopTime + " ns");
-        System.out.println("Stream : " + streamTime + " ns");
+        assertEquals("Capacity must be greater than zero", ex.getMessage());
+    }
 
-        System.out.println("\nResults match? " + (loopResult.size() == streamResult.size()));
+    @Test
+    void testException_ObjectIntegrityAfterCreation() throws Exception {
+        PassengerBogie b = new PassengerBogie("First Class", 40);
+        assertEquals("First Class", b.type);
+        assertEquals(40, b.capacity);
+    }
+
+    @Test
+    void testException_MultipleValidBogiesCreation() throws Exception {
+        PassengerBogie b1 = new PassengerBogie("Sleeper", 60);
+        PassengerBogie b2 = new PassengerBogie("AC", 80);
+
+        assertEquals(60, b1.capacity);
+        assertEquals(80, b2.capacity);
     }
 }

@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f6df5097-2fc4-4a61-b906-c0619cc78744" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/Train$GoodsBogie.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Train.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Train.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Train.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Train.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/test.java" afterDir="false" />
-    </list>
+    <list default="true" id="f6df5097-2fc4-4a61-b906-c0619cc78744" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -48,7 +43,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/UC12",
+    "git-widget-placeholder": "develop",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/Admin/Desktop/B2P1_RA2411031010061/-Train-Consist-Management-App",
     "project.structure.last.edited": "Project",
